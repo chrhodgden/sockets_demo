@@ -4,7 +4,8 @@ open(client, "r")
 
 # Receive a message from the server
 message <- readLines(client, n = 1)
-cat("Received message:", message, "\n")
+cat(client)
+cat("R Client:", message, "\n")
 
 # Clean up
 close(client)

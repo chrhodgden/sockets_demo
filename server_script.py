@@ -11,7 +11,7 @@ client_socket, client_address = server_socket.accept()
 print("Client connected:", client_address)
 
 # Send a message to the client
-message = "hello world"
+message = "Hello world! This message is from the Python server."
 print("Sending message:", message)
 client_socket.sendall(message.encode())
 

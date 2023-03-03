@@ -6,7 +6,7 @@ client_socket.connect(('localhost', 9999))
 
 # Receive a message from the server
 message = client_socket.recv(1024).decode()
-print("Received message:", message)
+print("Python Client:", message)
 
 # Clean up
 client_socket.close()
