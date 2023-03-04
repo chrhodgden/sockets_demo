@@ -1,11 +1,15 @@
 # Set up a socket client
-client <- socketConnection(host = "localhost", port = 9999)
-open(client, "r")
+con_client <- socketConnection(host = "localhost", port = 9999)
+# open(con_client, "r")
 
 # Receive a message from the server
-message <- readLines(client, n = 1)
-cat(client)
+message <- readLines(con_client)
+print(message)
+while(isIncomplete(con_client)) {
+	message <- readLines(con_client)
+	print(message)
+}
 cat("R Client:", message, "\n")
 
 # Clean up
-close(client)
+close(con_client)
