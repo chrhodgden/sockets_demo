@@ -1,16 +1,30 @@
 import socket
 
 HEADER = 64
+PORT = 6011
+SERVER = 'localhost'
+ADDR = (SERVER, PORT)
+FORMAT = 'utf-8'
+DISCONNECT_MESSAGE = b'!DISSCONNECT'
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket.connect(("localhost", 6011))
-while 1:
-	data = bytes(input("Enter text to be upper-cased, q to quit\n"), 'UTF-8')
+client_socket.connect(ADDR)
+
+connected = True
+
+while connected:
+	data = input("Enter text to be upper-cased, q to quit\n")
+	if (data.lower() == 'q' or data == DISCONNECT_MESSAGE):
+		data = DISCONNECT_MESSAGE.decode(FORMAT)
+		connected = False
+	data = bytes(data, FORMAT)
 	data += b' ' * (HEADER - len(data))
 	client_socket.send(data)
-	if (data == 'q' or data == 'Q'):
-		client_socket.close()
-		break
-	else:        
+	data = client_socket.recv(HEADER).strip()
+	if data == b'\x00':
+		print("ALERT")
 		data = client_socket.recv(HEADER).strip()
-		print("Your upper cased text:  " , data)
+	data = data.decode(FORMAT)
+	print("Your upper cased text: " , data)
+
+client_socket.close()
