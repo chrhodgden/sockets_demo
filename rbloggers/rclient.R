@@ -1,23 +1,39 @@
 HEADER <- 64
+PORT <- 6011
+SERVER <- "localhost"
+FORMAT <- "utf-8"
+DISCONNECT_MESSAGE <- "!DISSCONNECT"
 
-client <- function(){
-    con <- socketConnection(
-		host="localhost",
-		port = 6011,
-		blocking=TRUE,
-		server=FALSE,
-		open="r+"
-	)
-    sendme <- "idhvoeovgo"
-    if(tolower(sendme)=="q"){
-      break
-    }
-	sendme <- paste(sendme, strrep(" ", HEADER - nchar(sendme)), sep = "")
-    while (TRUE){
-		writeChar(sendme, con)
-    	server_resp <- trimws(readChar(con, HEADER))
-    	print(paste("Your upper cased text:  ", server_resp))
-	}
-    close(con)
+input <- function(prompt = "") {
+	fil <- file("stdin")
+	open(fil)
+	cat(prompt)
+	inp <- readLines(fil, n = 1)
+	return(inp)
 }
-client()
+
+con <- socketConnection(
+	host = SERVER,
+	port = PORT,
+	server = FALSE
+)
+
+connected <- TRUE
+
+while (connected) {
+	sendme <- input("input text (q to quit): ")
+	if (sendme == "q" | sendme == DISCONNECT_MESSAGE) {
+		sendme <- DISCONNECT_MESSAGE
+		connected <- FALSE
+	}
+	sendme <- paste(sendme, strrep(" ", HEADER - nchar(sendme)), sep = "")
+	writeChar(sendme, con)
+	server_resp <- trimws(readChar(con, HEADER))
+	if (length(server_resp) == 0) {
+		cat("ALERT\n")
+		server_resp <- trimws(readChar(con, HEADER))
+	}
+	cat(paste("Your upper cased text: ", server_resp, "\n"))
+}
+
+close(con)
