@@ -1,4 +1,4 @@
-HEADER <- 64
+HEADER <- 32
 PORT <- 6011
 SERVER <- "localhost"
 FORMAT <- "utf-8"
@@ -15,19 +15,28 @@ input <- function(prompt = "") {
 con <- socketConnection(
 	host = SERVER,
 	port = PORT,
-	server = FALSE
+	server = FALSE,
+	open = "a+b"
 )
 
 connected <- TRUE
 
 while (connected) {
-	sendme <- input("input text (q to quit): ")
-	if (sendme == "q" | sendme == DISCONNECT_MESSAGE) {
-		sendme <- DISCONNECT_MESSAGE
+	data <- input("input text (q to quit): ")
+	if (data == "q" | data == DISCONNECT_MESSAGE) {
+		data <- DISCONNECT_MESSAGE
 		connected <- FALSE
 	}
-	sendme <- paste(sendme, strrep(" ", HEADER - nchar(sendme)), sep = "")
-	writeBin(sendme, con)
+
+	data_len <- nchar(data)
+	data_len <- as.raw(data_len)
+	data_len <- rawToBits(data_len)
+	writeBin(data_len, con)
+
+	data <- paste(data, strrep(" ", HEADER - nchar(data)), sep = "")
+	data <- charToRaw(data)
+	data <- rawToBits(data)
+	writeBin(data, con)
 	server_resp <- trimws(readBin(con, "character", HEADER))
 	if (length(server_resp) == 0) {
 		cat("ALERT\n")

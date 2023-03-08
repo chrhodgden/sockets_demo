@@ -1,7 +1,8 @@
 import socket
+import struct
 import threading
 
-HEADER = 64
+HEADER = 32
 PORT = 6011
 SERVER = 'localhost'
 ADDR = (SERVER, PORT)
@@ -15,6 +16,7 @@ def handle_client(conn, addr):
 	print(f"[NEW CONNECRION] {addr} connected")
 	connected = True
 	while connected:
+
 		data = conn.recv(HEADER).strip()
 		if data == b'\x00':
 			print("ALERT")
