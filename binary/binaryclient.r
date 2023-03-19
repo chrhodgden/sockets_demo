@@ -22,27 +22,29 @@ con <- socketConnection(
 connected <- TRUE
 
 while (connected) {
-	data <- input("input text (q to quit): ")
-	if (data == "q" | data == DISCONNECT_MESSAGE) {
-		data <- DISCONNECT_MESSAGE
-		connected <- FALSE
-	}
 
-	data_len <- nchar(data)
-	data_len <- as.raw(data_len)
-	data_len <- rawToBits(data_len)
-	writeBin(data_len, con)
-
-	data <- paste(data, strrep(" ", HEADER - nchar(data)), sep = "")
+	data <- input("input text: ")
+	cat("{", data, "}", typeof(data), "\n")
 	data <- charToRaw(data)
+	cat("{", data, "}", typeof(data), "\n")
 	data <- rawToBits(data)
+	cat("{", data, "}", typeof(data), "\n")
+
 	writeBin(data, con)
-	server_resp <- trimws(readBin(con, "character", HEADER))
-	if (length(server_resp) == 0) {
-		cat("ALERT\n")
-		server_resp <- trimws(readBin(con, "character", HEADER))
-	}
-	cat(paste("Your upper cased text: ", server_resp, "\n"))
+
+	# data <- readBin(con, "raw", HEADER)
+	# while (length(data) == 0) {
+	# 	#cat("ALERT\n")
+	# 	data <- readBin(con, "raw", HEADER)
+	# }
+
+	# cat("{", data, "}", typeof(data), "\n")
+	# data <- packBits(data, "raw")
+	# cat("{", data, "}", typeof(data), "\n")
+	# data <- rawToChar(data)
+	# cat("{", data, "}", typeof(data), "\n")
+
+	connected <- FALSE
 }
 
 close(con)

@@ -17,16 +17,57 @@ def handle_client(conn, addr):
 	connected = True
 	while connected:
 
-		data = conn.recv(HEADER).strip()
+		data = conn.recv(HEADER)
 		if data == b'\x00':
 			print("ALERT")
-			data = conn.recv(HEADER).strip()
-		if data == DISCONNECT_MESSAGE:
-			connected = False
+			data = conn.recv(HEADER)
+		
 		print(f"[{addr}] <{data}>")
+		print(data, type(data))
+		n = ""
+		for b in data: n = f'{b}{n}'
+		data = n
+		print(data, type(data))
+		data = int(data, 2)
+		print(data, type(data))
+		data = hex(data)
+		print(data, type(data))
+		data = data.lstrip('0x')
+		print(data, type(data))
+		data = bytearray.fromhex(data)	
+		print(data, type(data))
+		data = data.decode()
+		print(data, type(data))
 		data = data.upper()
-		data += b' ' * (HEADER - len(data))
-		conn.send(data)
+		print(data, type(data))
+		
+		n = ""
+		for s in data: n += hex(ord(s)).lstrip('0x')
+		data = n
+		print(data, type(data))
+
+		data = int(data, 16)
+		print(data, type(data))
+
+		data = bin(data)
+		print(data, type(data))
+
+		data = data.lstrip('0b')
+		print(data, type(data))
+
+		n = b''
+		for s in data: 
+			m = int(s)
+			m = bytes(m)
+			print(m, type(m))
+			n += m
+		
+		data = n
+		print(data, type(data))
+
+#		conn.send(data)
+
+		connected = False
 	
 	conn.close()
 	    
