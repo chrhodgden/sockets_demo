@@ -1,10 +1,31 @@
 from ast import literal_eval
 
 cls_str = type("string")
+cls_byt = type(b'\x00')
 
-data = "hello"
+data = "101"
+data = b'\x00\x00\x00\x01\x00\x01\x01\x00'
 
-if type(data) == cls_str:
+if type(data) == cls_byt:
+
+	print(data, type(data))
+
+	n = ""
+	for b in data: n = f'{b}{n}'
+	data = n
+	print(data, type(data))
+	data = int(data, 2)
+	print(data, type(data))
+	data = hex(data)
+	print(data, type(data))
+	data = data.lstrip('0x')
+	print(data, type(data))
+	data = bytearray.fromhex(data)	
+	print(data, type(data))
+	data = data.decode()
+	print(data, type(data))
+
+elif type(data) == cls_str:
 
 	n = ""
 	print(data, type(data))
@@ -40,7 +61,7 @@ if type(data) == cls_str:
 	data = data.lstrip('0x')
 	print(data, type(data))
 
-	data = bytearray.fromhex(data)
+	data = bytearray.fromhex(data)	
 	print(data, type(data))
 
 	data = data.decode()

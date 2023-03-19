@@ -1,6 +1,6 @@
 #library(R.utils)
 
-data <- "e"
+data <- "E"
 #data <- as.integer(256)
 cat(data, typeof(data), "\n")
 
