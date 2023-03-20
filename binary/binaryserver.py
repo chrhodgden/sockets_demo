@@ -2,12 +2,13 @@ import socket
 import struct
 import threading
 
-HEADER = 32
+HEADER = 64
 PORT = 6011
 SERVER = 'localhost'
 ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
-DISCONNECT_MESSAGE = b'!DISSCONNECT'
+DISCONNECT_MESSAGE = 'SID!'
+DISCONNECT_SIGNAL = b'\x01\x00\x00\x00\x00\x01\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x01\x00\x00\x01\x00\x01\x00\x01\x00\x00\x01\x01'
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(ADDR)
@@ -38,6 +39,10 @@ def handle_client(conn, addr):
 		print(data, type(data))
 		data = data.decode()
 		print(data, type(data))
+
+		if data == DISCONNECT_MESSAGE or data == "".join(reversed(DISCONNECT_MESSAGE)):
+			connected = False
+
 		data = data.upper()
 		print(data, type(data))
 		
@@ -48,27 +53,25 @@ def handle_client(conn, addr):
 
 		data = int(data, 16)
 		print(data, type(data))
-
 		data = bin(data)
 		print(data, type(data))
-
-		data = data.lstrip('0b')
+		data = data.replace('b', '')
+		print(data, type(data))
+		data = ''.join(reversed(data))
 		print(data, type(data))
 
 		n = b''
-		for s in data: 
-			m = int(s)
-			m = bytes(m)
-			print(m, type(m))
+		for b in data:
+			m = int(b)
+			m = chr(m)
+			m = bytes(m, 'utf-8')
 			n += m
-		
+
 		data = n
 		print(data, type(data))
 
-#		conn.send(data)
+		conn.send(data)
 
-		connected = False
-	
 	conn.close()
 	    
 def start():

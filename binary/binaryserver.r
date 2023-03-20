@@ -1,8 +1,8 @@
-HEADER <- 32
+HEADER <- 64
 PORT <- 6011
 SERVER <- "localhost"
 FORMAT <- "utf-8"
-DISCONNECT_MESSAGE <- "!DISSCONNECT"
+DISCONNECT_MESSAGE <- "!DIS"
 
 cat("Listening...\n")
 
@@ -26,6 +26,11 @@ while (connected) {
 	cat("{", data, "}", typeof(data), "\n")
 	data <- rawToChar(data)
 	cat("{", data, "}", typeof(data), "\n")
+
+	if (data == DISCONNECT_MESSAGE | data == paste(rev(DISCONNECT_MESSAGE), collapse = "")) {
+		connected <- FALSE
+	}
+
 	data <- toupper(data)
 	cat("{", data, "}", typeof(data), "\n")
 	data <- charToRaw(data)
@@ -34,8 +39,7 @@ while (connected) {
 	cat("{", data, "}", typeof(data), "\n")
 
 	writeBin(data, con)
-		
-	connected <- FALSE
+
 }
 
 close(con)

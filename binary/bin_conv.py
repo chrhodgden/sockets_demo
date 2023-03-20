@@ -3,8 +3,8 @@ from ast import literal_eval
 cls_str = type("string")
 cls_byt = type(b'\x00')
 
-data = "101"
 data = b'\x00\x00\x00\x01\x00\x01\x01\x00'
+data = '!DIS'
 
 if type(data) == cls_byt:
 
@@ -50,6 +50,22 @@ elif type(data) == cls_str:
 	print(data, type(data))
 
 	data = data.zfill(8)
+	print(data, type(data))
+
+	n = b''
+	for b in data:
+		m = int(b)
+		m = chr(m)
+		m = bytes(m, 'utf-8')
+		print(m, type(m))
+		n += m
+
+	data = n
+	print(data, type(data))
+
+	n = ""
+	for b in data: n = f'{n}{b}'
+	data = n
 	print(data, type(data))
 
 	data = int(data, 2)

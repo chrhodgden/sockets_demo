@@ -1,8 +1,8 @@
-HEADER <- 32
+HEADER <- 64
 PORT <- 6011
 SERVER <- "localhost"
 FORMAT <- "utf-8"
-DISCONNECT_MESSAGE <- "!DISSCONNECT"
+DISCONNECT_MESSAGE <- "!DIS"
 
 input <- function(prompt = "") {
 	fil <- file("stdin")
@@ -24,6 +24,10 @@ connected <- TRUE
 while (connected) {
 
 	data <- input("input text: ")
+	if (data == "q") {
+		connected <- FALSE
+		data <- DISCONNECT_MESSAGE
+	}
 	cat("{", data, "}", typeof(data), "\n")
 	data <- charToRaw(data)
 	cat("{", data, "}", typeof(data), "\n")
@@ -32,19 +36,18 @@ while (connected) {
 
 	writeBin(data, con)
 
-	# data <- readBin(con, "raw", HEADER)
-	# while (length(data) == 0) {
-	# 	#cat("ALERT\n")
-	# 	data <- readBin(con, "raw", HEADER)
-	# }
+	data <- readBin(con, "raw", HEADER)
+	while (length(data) == 0) {
+		#cat("ALERT\n")
+		data <- readBin(con, "raw", HEADER)
+	}
 
-	# cat("{", data, "}", typeof(data), "\n")
-	# data <- packBits(data, "raw")
-	# cat("{", data, "}", typeof(data), "\n")
-	# data <- rawToChar(data)
-	# cat("{", data, "}", typeof(data), "\n")
+	cat("{", data, "}", typeof(data), "\n")
+	data <- packBits(data, "raw")
+	cat("{", data, "}", typeof(data), "\n")
+	data <- rawToChar(data)
+	cat("{", data, "}", typeof(data), "\n")
 
-	connected <- FALSE
 }
 
 close(con)
