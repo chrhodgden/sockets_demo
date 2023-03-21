@@ -1,3 +1,28 @@
+#What would I like to do?
+# I would like to have the python script open a socket connection, as a server i guess, 
+# then it would launch an R process that would connect to the socket
+# The python procedure could then send a binary vector or 2 to the R procedure
+# The R procedure would then either:
+	# put binary vector foward prop through a neural network
+		# and then send to python the output binary vector
+	# or use the 2 binary vectors to train the the neural network
+		# and then send to python the cost value
+# I should consider a 3rd mode where we send the target output vector and the ANN trains from the previous fw prop
+
+# So:
+# python script runs,
+# Python opens socket as server
+# python runs R script
+# R procedure connects to socket as client
+# Python procedure sends R procedure a binary vector
+# R procedure modifies the binary vector
+# R procedure sends Python procedure a binary vector
+# Process loops until we need to stop, probably from user
+# Python procedure sends R a disconnect signal
+# R procedure closes socket
+# R procedure ends
+# Python procedure ends 
+
 import socket
 import struct
 import threading
