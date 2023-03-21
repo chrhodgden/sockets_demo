@@ -2,3 +2,7 @@ notes.txt
 demo.py
 demo.r
 .lintr
+*.RData
+*__pycache__
+*.Rout
+idle.bat
